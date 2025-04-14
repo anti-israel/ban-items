@@ -14,3 +14,4 @@ A clear result is returned: either the product is associated with Israel (⚠️
 
 
 **Make a Issue for any bugs or something is missing on the database**
+Discord : https://discord.gg/Z8e4yeRU
