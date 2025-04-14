@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anti Israel</title>
+  <link rel="icon" type="image/png" href="anti.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: #dbeafe;
+      --danger-color: #ef4444;
+      --danger-light: #fee2e2;
+      --success-color: #10b981;
+      --success-light: #d1fae5;
+      --text-color: #1e293b;
+      --light-text: #64748b;
+      --light-bg: #f8fafc;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f5f9;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 36px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      max-width: 620px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--light-text);
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      color: var(--light-text);
+      pointer-events: none;
+      height: 20px;
+      width: 20px;
+    }
+
+    #productInput {
+      width: 100%;
+      padding: 16px 16px 16px 46px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    #productInput:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    #productInput::placeholder {
+      color: #a1a1aa;
+    }
+
+    #suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border: 2px solid var(--border-color);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      max-height: 225px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    .suggestion-item {
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggestion-item:hover {
+      background-color: var(--primary-light);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .check-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 16px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .check-button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .check-button:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-sm);
+    }
+
+    #result {
+      margin-top: 32px;
+      font-size: 16px;
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .result-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .result-text {
+      text-align: left;
+    }
+
+    .danger {
+      background-color: var(--danger-light);
+      color: var(--danger-color);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .success {
+      background-color: var(--success-light);
+      color: var(--success-color);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .highlight {
+      font-weight: 600;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .info-text {
+      font-size: 14px;
+      text-align: center;
+      color: var(--light-text);
+      margin-top: 24px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: var(--light-text);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+
+      #productInput {
+        padding: 14px 14px 14px 42px;
+      }
+
+      .check-button {
+        width: 100%;
+        padding: 14px;
+      }
+
+      #result {
+        padding: 16px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="app-header">
+      <h1>#FREE PALESTINE</h1>
+      <p class="subtitle">Verify if products are associated with Israel</p>
+    </div>
+
+    <div class="search-container">
+      <div class="input-container">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" id="productInput" placeholder="Enter product name..." autocomplete="off" aria-label="Product name">
+      </div>
+      <div id="suggestions" role="listbox"></div>
+    </div>
+
+    <div class="button-container">
+      <button class="check-button" onclick="checkProduct()">
+        <div class="loading" id="loadingIcon"></div>
+        <span>Check Product</span>
+      </button>
+    </div>
+
+    <div id="result" role="alert"></div>
+
+    <p class="info-text">Our database includes major brands and their subsidiaries. If a product isn't found, go to our discord and make a suggestion</p>
+  </div>
+
+  <div class="footer">
+    <p>Product Checker &copy; 2025 | Database updated regularly</p>
+  </div>
+
+  <script>
+    // Database of products with variations and aliases
+    const productDatabase = [
+      { name: "coca cola", aliases: ["coke", "cocacola", "coca-cola", "coca"] },
+      { name: "kfc", aliases: ["kentucky"] },
+      { name: "soda stream", aliases: ["sodastream", "soda-stream"] },
+      { name: "teva", aliases: ["teva pharmaceuticals", "teva pharma"] },
+      { name: "ahava", aliases: ["ahava cosmetics", "ahava dead sea"] },
+      { name: "osem", aliases: ["osem food", "osem group"] },
+      { name: "netafim", aliases: ["netafim irrigation", "netafim – agricultural technology", "netafim – irrigation"] },
+      { name: "intel", aliases: ["intel israel", "intel corporation"] },
+      { name: "mobileye", aliases: ["mobile eye", "mobileeye"] },
+      { name: "sababa", aliases: ["sababa group"] },
+      { name: "sabra", aliases: ["sabra hummus", "sabra dipping"] },
+      { name: "edtech", aliases: ["ed tech", "ed-tech"] },
+      { name: "elbit", aliases: ["elbit systems"] },
+      { name: "amdocs", aliases: ["amdocs ltd", "amdocs limited"] },
+      { name: "cardiacsense", aliases: ["cardiacsense ltd"] },
+      { name: "super-pharm", aliases: ["super pharm", "superpharm"] },
+      { name: "teva api", aliases: ["teva active pharmaceutical ingredients", "teva api"] },
+      { name: "source sandals", aliases: ["source footwear", "source"] },
+      { name: "elie tahari", aliases: ["tahari"] },
+      { name: "tnt clothing", aliases: ["tnt"] },
+      { name: "tzomet sfarim", aliases: ["tzomet"] },
+      { name: "yvel", aliases: ["yvel jewelry"] },
+      { name: "leibish & co", aliases: ["leibish and co", "leibish", "leibish & co – diamond jewelry"] },
+      { name: "cassidi", aliases: [] },
+      { name: "castro", aliases: [] },
+      { name: "fox clothing", aliases: ["fox"] },
+      { name: "gottex", aliases: ["gotex", "gottex swimwear"] },
+      { name: "honigman", aliases: [] },
+      { name: "kenvelo", aliases: [] },
+      { name: "naot", aliases: ["naot shoes", "naot sandals"] },
+      { name: "l'chaim vodka", aliases: ["lchaim vodka"] },
+      { name: "landwer coffee", aliases: ["landwer"] },
+      { name: "lone tree brewery", aliases: ["lone tree"] },
+      { name: "macdavid", aliases: [] },
+      { name: "max brenner", aliases: [] },
+      { name: "mey eden", aliases: ["meyeden", "mey eden water"] },
+      { name: "neviot", aliases: ["neviot drinking water"] },
+      { name: "noblesse cigarette", aliases: ["noblesse"] },
+      { name: "time cigarette", aliases: ["time"] },
+      { name: "tempo beer industries", aliases: ["tempo beer"] },
+      { name: "vodka perfect", aliases: [] },
+      { name: "rabl", aliases: [] },
+      { name: "strauss group", aliases: ["strauss", "strauss coffee", "strauss snacks", "strauss dairy", "strauss chocolate"] },
+      { name: "tara dairy", aliases: ["tara", "tara yogurt", "tara cheese", "tara labneh"] },
+      { name: "tnuva", aliases: ["tnuva milk", "tnuva cheese", "tnuva meat"] },
+      { name: "tiv ta'am", aliases: ["tiv taam"] },
+      { name: "mc donalds", aliases: ["MC DONALDS"] },
+      { name: "angel bakeries", aliases: ["angel"] },
+      { name: "bamba", aliases: ["bamba snack"] },
+      { name: "berman's bakery", aliases: ["berman bakery"] },
+      { name: "bissli", aliases: ["bissli wheat snack"] },
+      { name: "carmel agrexco", aliases: [] },
+      { name: "carmel winery", aliases: [] },
+      { name: "cow chocolate", aliases: [] },
+      { name: "ein gedi mineral water", aliases: ["ein gedi", "ein gedi water"] },
+      { name: "galilee green", aliases: [] },
+      { name: "klik", aliases: ["click", "klik candy"] },
+      { name: "krembo", aliases: ["krembo sweet"] },
+      { name: "maadaney yehiam", aliases: ["yehiam", "maadaney yehiam  chocolate", "maadaney yehiam  praline"] },
+      { name: "gefen", aliases: ["gefen canned food", "gefen sauces", "gefen matzo"] },
+      { name: "unilever israel", aliases: ["unilever israel  ice cream", "unilever israel  margarine"] },
+      { name: "blue and white food", aliases: ["blue and white food  dairy alternative"] },
+      { name: "shamir salads", aliases: ["shamir salad", "shamir spreads"] },
+      { name: "soglowek", aliases: ["soglowek sausage", "soglowek cold cut"] },
+      { name: "willi-food", aliases: ["willi food", "willi-food  kosher products"] },
+      { name: "nestlé israel", aliases: ["nestle israel", "nestle baby food", "nestle coffee"] },
+      { name: "adama", aliases: ["adama pesticide"] },
+      { name: "pereg natural foods", aliases: ["pereg", "pereg spices", "pereg pulses", "pereg seeds"] },
+      { name: "tivol", aliases: ["tivol frozen food"] },
+      { name: "gilboa", aliases: ["gilboa juices", "gilboa drinks"] },
+      { name: "negev food", aliases: ["negev food  processed meat", "negev food  frozen foods"] },
+      { name: "shalgal", aliases: ["shalgal kosher food", "shalgal sauces"] },
+      { name: "soy-based products", aliases: ["soy products", "soy foods"] },
+      
+      { name: "7up", aliases: ["seven up", "7 up", "7UP"] },
+      { name: "sprite", aliases: [] },
+      { name: "pepsi", aliases: [] },
+      { name: "aquafina", aliases: [] },
+      { name: "mirinda", aliases: [] },
+      { name: "mountain dew", aliases: ["mtn dew"] },
+      { name: "fanta", aliases: [] },
+      { name: "kinley", aliases: [] },
+      { name: "fair & lovely", aliases: ["fair and lovely"] },
+      { name: "fair & lovely men", aliases: ["fair and lovely men"] },
+      { name: "fair and handsome", aliases: [] },
+      { name: "garnier", aliases: ["garnier men"] },
+      { name: "rexona", aliases: [] },
+      { name: "maggi noodles", aliases: ["mr. noodles", "maggi"] },
+      { name: "kurkure", aliases: ["kurkure chips"] },
+      { name: "sun chips", aliases: ["chips", "chip"] },
+      { name: "maggi macaroni", aliases: [] },
+      { name: "lays", aliases: ["lays chips"] },
+      { name: "lactogen", aliases: [] },
+      { name: "horlicks", aliases: [] },
+      { name: "nescafe", aliases: [] },
+      { name: "oreo", aliases: [] },
+      { name: "kitkat", aliases: [] },
+      { name: "joy gluco biscuits", aliases: ["joy biscuits"] },
+      { name: "closeup", aliases: ["close up"] },
+      { name: "pepsodent", aliases: ["pepsodent toothpaste", "Toothpaste"] },
+      { name: "colgate", aliases: ["colgate toothpaste"] },
+      { name: "dettol", aliases: ["dettol soap"] },
+      { name: "vicks", aliases: [] },
+      { name: "gillette", aliases: [] },
+      { name: "lifebuoy", aliases: ["lifebuoy soap"] },
+      { name: "harpic", aliases: [] },
+      { name: "johnson's baby lotion", aliases: ["johnsons baby lotion"] },
+      { name: "nivea", aliases: [] },
+      { name: "sunsilk", aliases: ["sunsilk shampoo"] },
+      { name: "dove", aliases: ["dove soap", "dove shampoo"] },
+      { name: "clear", aliases: ["clear shampoo"] },
+      { name: "vim", aliases: ["vim soap"] },
+      { name: "wheel", aliases: ["wheel soap"] },
+      { name: "lux", aliases: ["lux soap"] },
+      { name: "bkash", aliases: [] },
+      { name: "bata", aliases: [] },
+      { name: "adidas", aliases: [] },
+      { name: "puma", aliases: [] },
+      { name: "nike", aliases: [] },
+      { name: "lg", aliases: [] },
+      { name: "apple", aliases: [] },
+      { name: "nokia", aliases: [] },
+      { name: "taaza tea", aliases: ["taaza", "fresh tea"] },
+      { name: "tang", aliases: [] },
+      { name: "surf excel", aliases: [] },
+      { name: "rin", aliases: [] }
+    ];
+
+    const allProductTerms = productDatabase.reduce((acc, product) => {
+      acc.push(product.name);
+      product.aliases.forEach(alias => acc.push(alias));
+      return acc;
+    }, []);
+
+    const input = document.getElementById('productInput');
+    const suggestionBox = document.getElementById('suggestions');
+    const result = document.getElementById('result');
+    const loadingIcon = document.getElementById('loadingIcon');
+
+    function debounce(func, delay) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+      };
+    }
+
+    function searchProducts(query) {
+      query = query.toLowerCase().trim();
+      if (!query) return [];
+      const matches = allProductTerms.filter(term =>
+        term.includes(query) || query.includes(term)
+      );
+      return [...new Set(matches)].slice(0, 5);
+    }
+
+    function fuzzyMatch(str1, str2) {
+      str1 = str1.replace(/[-\s]/g, '');
+      str2 = str2.replace(/[-\s]/g, '');
+      if (str1 === str2) return true;
+
+      const set1 = new Set(str1.split(''));
+      const set2 = new Set(str2.split(''));
+      const intersection = [...set1].filter(char => set2.has(char)).length;
+      const union = set1.size + set2.size - intersection;
+      return intersection / union > 0.8;
+    }
+
+    function isIsraeliProduct(productName) {
+      productName = productName.toLowerCase().trim();
+      if (allProductTerms.includes(productName)) return true;
+      for (const term of allProductTerms) {
+        if (fuzzyMatch(term, productName)) return true;
+      }
+      return false;
+    }
+
+    function getCanonicalName(productName) {
+      productName = productName.toLowerCase().trim();
+      for (const product of productDatabase) {
+        if (product.name === productName || product.aliases.includes(productName)) {
+          return product.name;
+        }
+        if (fuzzyMatch(product.name, productName)) return product.name;
+        for (const alias of product.aliases) {
+          if (fuzzyMatch(alias, productName)) return product.name;
+        }
+      }
+      return null;
+    }
+
+    function showSuggestions(query) {
+      const matches = searchProducts(query);
+      suggestionBox.innerHTML = '';
+      
+      if (matches.length === 0) {
+        suggestionBox.innerHTML = '<div class="suggestion-item">No matches found</div>';
+      } else {
+        matches.forEach(match => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item';
+          div.textContent = match;
+          div.setAttribute('role', 'option');
+          div.addEventListener('click', () => {
+            input.value = match;
+            suggestionBox.style.display = 'none';
+            checkProduct();
+          });
+          suggestionBox.appendChild(div);
+        });
+      }
+      
+      suggestionBox.style.display = 'block';
+    }
+
+    const debouncedShowSuggestions = debounce((e) => {
+      const query = e.target.value.trim();
+      if (query.length >= 2) {
+        showSuggestions(query);
+      } else {
+        suggestionBox.style.display = 'none';
+      }
+    }, 200);
+
+    input.addEventListener('input', debouncedShowSuggestions);
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== input && e.target !== suggestionBox && !suggestionBox.contains(e.target)) {
+        suggestionBox.style.display = 'none';
+      }
+    });
+
+    input.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        checkProduct();
+      }
+    });
+
+    function simulateLoading() {
+      return new Promise(resolve => {
+        loadingIcon.style.display = 'inline-block';
+        setTimeout(() => {
+          loadingIcon.style.display = 'none';
+          resolve();
+        }, 800);
+      });
+    }
+
+    async function checkProduct() {
+      const inputValue = input.value.trim();
+      
+      if (!inputValue) {
+        result.innerHTML = `
+          <div class="result-icon">ℹ️</div>
+          <div class="result-text">Please enter a product name.</div>
+        `;
+        result.className = "";
+        result.style.opacity = 1;
+        result.style.transform = "translateY(0)";
+        return;
+      }
+
+      
+      await simulateLoading();
+
+      if (isIsraeliProduct(inputValue)) {
+        const canonicalName = getCanonicalName(inputValue) || inputValue;
+        result.innerHTML = `
+          <div class="result-icon">⚠️</div>
+          <div class="result-text">
+            <span class="highlight">${inputValue}</span> is associated with Israel (known as <span class="highlight">${canonicalName}</span>). Consider boycotting.
+          </div>
+        `;
+        result.className = "danger";
+      } else {
+        result.innerHTML = `
+          <div class="result-icon">✅</div>
+          <div class="result-text">
+            "${inputValue}" is not on the Israel product list.
+          </div>
+        `;
+        result.className = "success";
+      }
+
+      result.style.opacity = 1;
+      result.style.transform = "translateY(0)";
+    }
+
+    
+    input.addEventListener('focus', () => {
+      input.parentElement.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.2)';
+    });
+
+    input.addEventListener('blur', () => {
+      input.parentElement.style.boxShadow = 'none';
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      document.getElementById('homePage').style.display = 'block';
+      document.getElementById('newsPage').style.display = 'none';
+      document.getElementById('suggestionsPage').style.display = 'none';
+    });
+
+
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    });
+
+    
+    document.addEventListener('keydown', function(event) {
+        
+        if (event.key === "F12") {
+            event.preventDefault();
+        }
+        
+        if (event.ctrlKey && event.shiftKey && event.key === "I") {
+            event.preventDefault();
+        }
+        
+        if (event.ctrlKey && event.key === "U") {
+            event.preventDefault();
+        }
+    });
+
+
+
+
+  </script>
+</body>
+</html>
